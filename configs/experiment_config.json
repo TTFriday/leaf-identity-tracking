@@ -1,0 +1,75 @@
+{
+    "manifest_path": "${MANIFEST_PATH:-../phenoleaf_lowlabel/data_audit/manifest.json}",
+    "plant_split_path": "${SPLIT_PATH:-../phenoleaf_lowlabel/splits/plant_split.json}",
+    "output_dir": "${OUTPUT_DIR:-results}",
+    "audit_dir": "${OUTPUT_DIR:-results}/identity_audit",
+
+    "tracker_configs": {
+        "geometric_hungarian": {
+            "max_distance": 150.0,
+            "min_iou": 0.1,
+            "max_missing_hours": 72.0
+        },
+        "geometric_shape": {
+            "max_distance": 150.0,
+            "min_iou": 0.1,
+            "max_missing_hours": 72.0,
+            "shape_weight": 0.5
+        },
+        "appearance_memory": {
+            "max_distance": 150.0,
+            "min_iou": 0.1,
+            "max_missing_hours": 72.0,
+            "memory_length": 5,
+            "appearance_weight": 0.3
+        },
+        "relation_tracker": {
+            "max_distance": 150.0,
+            "min_iou": 0.1,
+            "max_missing_hours": 72.0,
+            "memory_length": 16,
+            "geo_weight": 0.6,
+            "relation_weight": 0.4,
+            "hist_weight": 0.1,
+            "min_anchors": 2,
+            "anchor_dist_threshold": 250,
+            "max_anchors": 6,
+            "rejection_threshold": 6.0,
+            "no_anchor_gate": 6.0,
+            "anchor_support": 0.45,
+            "extended_distance": 300.0,
+            "veto_threshold": 0.45,
+            "verify_active": true
+        }
+    },
+
+    "missing_event_filters": {
+        "min_gap_hours": 12.0,
+        "max_gap_hours": 72.0,
+        "min_pre_reliable_frames": 2,
+        "min_post_reliable_frames": 2
+    },
+
+    "evaluation": {
+        "split": "plant-level, seed 42, stratified by genotype",
+        "eval_plants": 98,
+        "iou_threshold": 0.5,
+        "primary_metric": "net_recovery_rate",
+        "secondary_metrics": [
+            "recovery_success_rate",
+            "error_recovery_rate",
+            "HOTA",
+            "AssA",
+            "IDF1",
+            "MOTA",
+            "ID_switches",
+            "area_mae"
+        ]
+    },
+
+    "experiment": {
+        "max_plants": null,
+        "random_seed": 42,
+        "bootstrap_resamples": 2000
+    }
+}
