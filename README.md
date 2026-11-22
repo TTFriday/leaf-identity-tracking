@@ -16,12 +16,27 @@ This repository implements an appearance-free framework for identity-consistent 
 
 ## Performance
 
-On 98 PhenoLeaf-TS plants with 225 audited occlusion events:
+Reported values follow the corrected evaluation used in the revised manuscript:
+official TrackEval 1.3.0 with bounding-box IoU thresholds 0.05-0.95, and an
+occlusion-event rule that fixes the pre-gap identity at the most recent matched
+observation before the last visible frame and reads the outcome at the first
+matched observation within ten frames after annotated reappearance.
 
-- **Net recovery**: 46.2% (vs 36.0% for geometric baseline)
-- **Wrong identity rate**: 14.7% (vs 19.1% for geometric baseline, -23% relative)
-- **Frame-level HOTA**: 0.953
-- **Per-plant improvement**: +9.6 points (Wilcoxon p=0.0047)
+On 209 annotation gaps with mask-coverage evidence from the 98 historical plants:
+
+- **Pre-gap ID recovered**: 63.2% (anchor-relation method) vs 61.7% (geometric)
+- **Different old ID returned**: 12.0% vs 11.5%
+- **Net utility difference**: +0.96 points, plant-bootstrap 95% CI -10.00 to +11.48
+- **Frame-level HOTA**: 0.8433 vs 0.8566 for geometric Hungarian (difference -0.0133, 95% CI -0.0238 to -0.0030); identity switches 1104 vs 877
+- **Actual segmenter outputs on 53 complete sequences**: net utility 11.9% vs 14.4%, HOTA 0.4999 vs 0.5304; lowering the veto threshold to 0.35 raises relation HOTA to 0.5379
+
+Net utility is recovered minus different-old-ID outcomes and is a preference-based
+score, not a return probability. The association module is presented as a
+scale-dependent building block rather than a general replacement for geometric or
+learned leaf trackers. The figures previously listed here (net recovery 46.2%,
+frame-level HOTA 0.953, +9.6 points per plant) came from an approximate metric
+implementation and the previous pre-gap identity rule; they are superseded by the
+values above and by the tables in the paper.
 
 ## Installation
 
@@ -164,10 +179,20 @@ Key parameters (see `configs/experiment_config.json`):
 
 ## Results
 
-Experiment results are provided in `results/`:
+The files in `results/` are outputs of the initial pre-revision runs and are kept
+for provenance, not as the current headline numbers:
 
 - `experiment_results.json`: Main comparison (225 events, 4 methods)
 - `ablation_results.json`: Component ablation study (7 variants)
 - `sweep_results.json`: Parameter sensitivity (28 configurations)
+
+The revised evaluation and experiment code, the audited event catalogue and the
+supporting Tables S1-S8 are provided as the
+`leaf_identity_tracking_revision_20261121.zip` asset of the
+[v1.1.0 release](https://github.com/TTFriday/leaf-identity-tracking/releases/tag/v1.1.0).
+That archive recomputes the standard metrics and event outcomes; it does not
+change the tracker in `src/trackers.py` or the frozen settings in
+`configs/experiment_config.json`, both of which are byte-identical to this
+repository.
 
 ##
